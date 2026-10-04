@@ -88,7 +88,17 @@ The app is frontend-only for now. API calls go through `src/lib/api.ts`, which r
 cp .env.example .env.local
 ```
 
-The contact form calls `submitInquiry` in `src/services/inquiries.ts`. With `VITE_API_URL` set, it sends a `POST` to `/inquiries` with this JSON body:
+### Contact form
+
+The contact form calls `submitInquiry` in `src/services/inquiries.ts`, which delivers inquiries in this order:
+
+1. **Own backend.** If `VITE_API_URL` is set, it sends a `POST` to `/inquiries`.
+2. **Web3Forms.** If `VITE_WEB3FORMS_KEY` is set, it posts to [Web3Forms](https://web3forms.com), which emails the inquiry to the address the key was created for. Replying to that email goes straight to the visitor.
+3. **Email client.** With neither set, it opens the visitor's email app with the inquiry prefilled.
+
+The Web3Forms key is safe to expose in the browser. Get one at [web3forms.com](https://web3forms.com) by entering the inbox that should receive inquiries, then add it to `.env.local` and to the Vercel project's environment variables.
+
+The backend request body looks like this:
 
 ```json
 {
@@ -100,8 +110,6 @@ The contact form calls `submitInquiry` in `src/services/inquiries.ts`. With `VIT
   "message": "string"
 }
 ```
-
-Without an API URL, the form opens the visitor's email client with the inquiry prefilled.
 
 ## Deployment
 

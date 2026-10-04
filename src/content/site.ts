@@ -7,8 +7,8 @@ export const site = {
   description:
     'Elites designs, builds and maintains web platforms, mobile apps and cloud systems for companies that need software they can rely on.',
   url: 'https://elites.dev',
-  email: 'hello@elites.dev',
-  phone: '+63 900 000 0000',
+  email: 'connect.with.elites@gmail.com',
+  phone: '+63 954 449 8779',
   location: 'Philippines',
   timezone: 'GMT+8',
   hours: 'Mon to Fri, 9:00 to 18:00',

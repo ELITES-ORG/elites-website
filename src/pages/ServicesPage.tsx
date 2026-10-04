@@ -1,6 +1,6 @@
 import { motion } from 'motion/react'
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { PAGE_REVEAL_DELAY } from '@/components/layout/PageTransition'
 import { Seo } from '@/components/layout/Seo'
 import { PageHero } from '@/components/sections/PageHero'
@@ -186,13 +186,29 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="container-page grid gap-12 section-y lg:grid-cols-12 lg:gap-10">
-        <div className="lg:col-span-4">
-          <SectionHeader eyebrow="FAQ" lines={['Common', 'questions']} outlineLine={1} />
+      <section className="container-page section-y">
+        <SectionHeader
+          eyebrow="FAQ"
+          lines={['Common', 'questions']}
+          outlineLine={1}
+          aside={
+            <p className="leading-relaxed text-ash">
+              Something else on your mind?{' '}
+              <Link
+                to="/contact"
+                className="text-bone underline decoration-signal underline-offset-4 hover:text-signal"
+              >
+                Ask us directly
+              </Link>
+              .
+            </p>
+          }
+        />
+        <div className="mt-16 grid md:mt-24 lg:grid-cols-12 lg:gap-10">
+          <FadeIn className="lg:col-span-8 lg:col-start-5">
+            <Accordion items={faqs} />
+          </FadeIn>
         </div>
-        <FadeIn className="lg:col-span-8">
-          <Accordion items={faqs} />
-        </FadeIn>
       </section>
     </>
   )

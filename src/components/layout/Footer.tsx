@@ -50,8 +50,8 @@ export function Footer({ showCta = true }: { showCta?: boolean }) {
       {showCta && <FooterCta />}
 
       <div className="container-page pt-20 pb-10 md:pt-24">
-        <div className="grid gap-14 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
-          <div className="flex flex-col gap-6 lg:col-span-4">
+        <div className="grid gap-14 md:grid-cols-2 xl:grid-cols-12 xl:gap-8">
+          <div className="flex flex-col gap-6 xl:col-span-4">
             <Link to="/" aria-label="Elites home" className="w-fit">
               <Wordmark className="w-36" />
             </Link>
@@ -62,7 +62,7 @@ export function Footer({ showCta = true }: { showCta?: boolean }) {
             </p>
           </div>
 
-          <nav aria-label="Footer" className="lg:col-span-2 lg:col-start-6">
+          <nav aria-label="Footer" className="xl:col-span-2">
             <h2 className="mb-6 eyebrow text-ash">Company</h2>
             <ul className="flex flex-col gap-3">
               {navigation.map((item) => (
@@ -75,7 +75,7 @@ export function Footer({ showCta = true }: { showCta?: boolean }) {
             </ul>
           </nav>
 
-          <div className="lg:col-span-3">
+          <div className="xl:col-span-3">
             <h2 className="mb-6 eyebrow text-ash">Services</h2>
             <ul className="flex flex-col gap-3">
               {services.slice(0, 5).map((s) => (
@@ -88,9 +88,9 @@ export function Footer({ showCta = true }: { showCta?: boolean }) {
             </ul>
           </div>
 
-          <div className="lg:col-span-2">
+          <div className="xl:col-span-3">
             <h2 className="mb-6 eyebrow text-ash">Contact</h2>
-            <ul className="flex flex-col gap-3 text-bone/85">
+            <ul className="flex flex-col gap-3 [overflow-wrap:anywhere] text-bone/85">
               <li>
                 <a href={`mailto:${site.email}`} className="transition-colors hover:text-signal">
                   {site.email}

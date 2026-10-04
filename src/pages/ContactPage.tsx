@@ -115,9 +115,11 @@ function InquiryForm() {
       return
     }
 
+    const honeypot = new FormData(e.currentTarget).get('botcheck') !== null
+
     setStatus({ kind: 'sending' })
     try {
-      const result = await submitInquiry(form)
+      const result = await submitInquiry(form, honeypot)
       setStatus({ kind: result })
       if (result === 'sent') setForm(emptyForm)
     } catch (err) {
@@ -153,6 +155,7 @@ function InquiryForm() {
 
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-12">
+      <input type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
       <div className="grid gap-12 md:grid-cols-2 md:gap-8">
         <Field id="inquiry-name" label="Your name" error={errors.name}>
           <input
@@ -295,7 +298,11 @@ export default function ContactPage() {
         />
 
         <div className="mt-16 grid gap-16 border-t border-graphite pt-12 md:mt-24 lg:grid-cols-12 lg:gap-10 lg:pt-16">
-          <FadeIn trigger="mount" delay={d + 0.35} className="flex flex-col gap-12 lg:col-span-4">
+          <FadeIn
+            trigger="mount"
+            delay={d + 0.35}
+            className="flex flex-col gap-12 [overflow-wrap:anywhere] lg:col-span-5"
+          >
             <dl className="flex flex-col gap-8">
               {[
                 { label: 'Email', value: site.email, href: `mailto:${site.email}`, icon: 'fi-rs-envelope' },

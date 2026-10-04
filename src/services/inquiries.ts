@@ -16,6 +16,9 @@ export type InquiryErrors = Partial<Record<keyof InquiryInput, string>>
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit'
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY?.trim() ?? ''
+
 export function validateInquiry(input: InquiryInput): InquiryErrors {
   const errors: InquiryErrors = {}
   if (input.name.trim().length < 2) errors.name = 'Enter your name.'
@@ -23,6 +26,10 @@ export function validateInquiry(input: InquiryInput): InquiryErrors {
   if (input.message.trim().length < 20)
     errors.message = 'Tell us a little more about the project (at least 20 characters).'
   return errors
+}
+
+function subjectFor(input: InquiryInput) {
+  return `Project inquiry from ${input.name}${input.company ? `, ${input.company}` : ''}`
 }
 
 function toMailto(input: InquiryInput) {
@@ -36,17 +43,46 @@ function toMailto(input: InquiryInput) {
     input.message,
   ].filter((line) => line !== null)
 
-  const subject = `Project inquiry from ${input.name}${input.company ? `, ${input.company}` : ''}`
-  return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`
+  return `mailto:${site.email}?subject=${encodeURIComponent(subjectFor(input))}&body=${encodeURIComponent(lines.join('\n'))}`
+}
+
+async function sendViaWeb3Forms(input: InquiryInput, botcheck: boolean) {
+  const response = await fetch(WEB3FORMS_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({
+      access_key: WEB3FORMS_KEY,
+      subject: subjectFor(input),
+      from_name: `${site.name} website`,
+      botcheck,
+      name: input.name,
+      email: input.email,
+      company: input.company || 'Not provided',
+      budget: input.budget || 'Not provided',
+      services: input.services.length > 0 ? input.services.join(', ') : 'Not provided',
+      message: input.message,
+    }),
+  })
+
+  const result = (await response.json().catch(() => null)) as { success?: boolean } | null
+  if (!response.ok || !result?.success) {
+    throw new Error('Inquiry could not be delivered')
+  }
 }
 
 /**
- * Posts to `${VITE_API_URL}/inquiries` once a backend exists.
- * Without one, it opens the visitor's email client with the inquiry prefilled.
+ * Delivery order: own backend (`VITE_API_URL`), then Web3Forms (`VITE_WEB3FORMS_KEY`),
+ * then the visitor's email client as a last resort.
+ * `botcheck` is the honeypot field value; Web3Forms drops submissions where it is set.
  */
-export async function submitInquiry(input: InquiryInput): Promise<'sent' | 'mailto'> {
+export async function submitInquiry(input: InquiryInput, botcheck = false): Promise<'sent' | 'mailto'> {
   if (isApiConfigured) {
     await apiRequest('/inquiries', { method: 'POST', body: input })
+    return 'sent'
+  }
+
+  if (WEB3FORMS_KEY) {
+    await sendViaWeb3Forms(input, botcheck)
     return 'sent'
   }
 
