@@ -1,5 +1,8 @@
 import { site } from '@/content/site'
 import { apiRequest, isApiConfigured } from '@/lib/api'
+import { InquiryRateLimitError, looksAutomated, recordSubmission, retryAfter } from './inquiry-limiter'
+
+export { formatWait, InquiryRateLimitError } from './inquiry-limiter'
 
 export const budgetRanges = ['Under $10k', '$10k to $25k', '$25k to $50k', '$50k+', 'Not sure yet'] as const
 
@@ -46,7 +49,7 @@ function toMailto(input: InquiryInput) {
   return `mailto:${site.email}?subject=${encodeURIComponent(subjectFor(input))}&body=${encodeURIComponent(lines.join('\n'))}`
 }
 
-async function sendViaWeb3Forms(input: InquiryInput, botcheck: boolean) {
+async function sendViaWeb3Forms(input: InquiryInput) {
   const response = await fetch(WEB3FORMS_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -54,7 +57,6 @@ async function sendViaWeb3Forms(input: InquiryInput, botcheck: boolean) {
       access_key: WEB3FORMS_KEY,
       subject: subjectFor(input),
       from_name: `${site.name} website`,
-      botcheck,
       name: input.name,
       email: input.email,
       company: input.company || 'Not provided',
@@ -70,22 +72,41 @@ async function sendViaWeb3Forms(input: InquiryInput, botcheck: boolean) {
   }
 }
 
-/**
- * Delivery order: own backend (`VITE_API_URL`), then Web3Forms (`VITE_WEB3FORMS_KEY`),
- * then the visitor's email client as a last resort.
- * `botcheck` is the honeypot field value; Web3Forms drops submissions where it is set.
- */
-export async function submitInquiry(input: InquiryInput, botcheck = false): Promise<'sent' | 'mailto'> {
+interface SubmitGuard {
+  /** When the form was first shown, used to catch instant bot submissions */
+  startedAt: number
+  /** Whether the hidden honeypot field was filled in */
+  honeypot: boolean
+}
+
+async function deliver(input: InquiryInput): Promise<'sent' | 'mailto'> {
   if (isApiConfigured) {
     await apiRequest('/inquiries', { method: 'POST', body: input })
     return 'sent'
   }
 
   if (WEB3FORMS_KEY) {
-    await sendViaWeb3Forms(input, botcheck)
+    await sendViaWeb3Forms(input)
     return 'sent'
   }
 
   window.location.href = toMailto(input)
   return 'mailto'
+}
+
+/**
+ * Delivery order: own backend (`VITE_API_URL`), then Web3Forms (`VITE_WEB3FORMS_KEY`),
+ * then the visitor's email client as a last resort.
+ * Suspected bots get a success response without anything being sent, so they have no signal to adapt to.
+ * Throws `InquiryRateLimitError` when this browser has hit the submission limit.
+ */
+export async function submitInquiry(input: InquiryInput, guard: SubmitGuard): Promise<'sent' | 'mailto'> {
+  if (looksAutomated(guard.startedAt, guard.honeypot)) return 'sent'
+
+  const wait = retryAfter()
+  if (wait > 0) throw new InquiryRateLimitError(wait)
+
+  const result = await deliver(input)
+  recordSubmission()
+  return result
 }

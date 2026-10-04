@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { PAGE_REVEAL_DELAY } from '@/components/layout/PageTransition'
 import { Seo } from '@/components/layout/Seo'
 import { Button } from '@/components/ui/Button'
@@ -14,6 +14,8 @@ import { cn } from '@/lib/cn'
 import { easeExpo } from '@/lib/motion'
 import {
   budgetRanges,
+  formatWait,
+  InquiryRateLimitError,
   submitInquiry,
   validateInquiry,
   type InquiryErrors,
@@ -94,6 +96,11 @@ function InquiryForm() {
   const [form, setForm] = useState<InquiryInput>(emptyForm)
   const [errors, setErrors] = useState<InquiryErrors>({})
   const [status, setStatus] = useState<Status>({ kind: 'idle' })
+  const startedAt = useRef(0)
+
+  useEffect(() => {
+    startedAt.current = Date.now()
+  }, [])
 
   const update = <K extends keyof InquiryInput>(key: K, value: InquiryInput[K]) => {
     setForm((f) => ({ ...f, [key]: value }))
@@ -119,14 +126,17 @@ function InquiryForm() {
 
     setStatus({ kind: 'sending' })
     try {
-      const result = await submitInquiry(form, honeypot)
+      const result = await submitInquiry(form, { startedAt: startedAt.current, honeypot })
       setStatus({ kind: result })
       if (result === 'sent') setForm(emptyForm)
     } catch (err) {
-      setStatus({
-        kind: 'error',
-        message: err instanceof ApiError ? err.message : `Something went wrong. Email us directly at ${site.email}.`,
-      })
+      let message = `Something went wrong. Email us directly at ${site.email}.`
+      if (err instanceof InquiryRateLimitError) {
+        message = `You have sent several messages recently. Try again in ${formatWait(err.retryAfterMs)}, or email ${site.email} if it is urgent.`
+      } else if (err instanceof ApiError) {
+        message = err.message
+      }
+      setStatus({ kind: 'error', message })
     }
   }
 

@@ -96,6 +96,8 @@ The contact form calls `submitInquiry` in `src/services/inquiries.ts`, which del
 2. **Web3Forms.** If `VITE_WEB3FORMS_KEY` is set, it posts to [Web3Forms](https://web3forms.com), which emails the inquiry to the address the key was created for. Replying to that email goes straight to the visitor.
 3. **Email client.** With neither set, it opens the visitor's email app with the inquiry prefilled.
 
+Spam protection lives in `src/services/inquiry-limiter.ts`: a hidden honeypot field, a minimum fill time that catches instant bot submissions, and a per-browser limit of one inquiry per minute and three per hour. These checks run in the browser, so they stop casual spam but not someone posting to Web3Forms directly; a server-side limiter would be the next step if that becomes a problem.
+
 The Web3Forms key is safe to expose in the browser. Get one at [web3forms.com](https://web3forms.com) by entering the inbox that should receive inquiries, then add it to `.env.local` and to the Vercel project's environment variables.
 
 The backend request body looks like this:
