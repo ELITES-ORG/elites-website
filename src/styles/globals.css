@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-ink: #0d0d0d;
+  --color-carbon: #141414;
+  --color-graphite: #232323;
+  --color-smoke: #3a3a3a;
+  --color-ash: #8f8f8f;
+  --color-bone: #f4f4f2;
+  --color-signal: #dd2b37;
+  --color-signal-deep: #b51f2a;
+
+  --font-display: 'Akira Expanded', 'Archivo Variable', 'Arial Black', sans-serif;
+  --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --text-hero: clamp(1.6rem, 8.2vw, 8.75rem);
+  --text-hero--line-height: 0.94;
+  --text-display-xl: clamp(2.25rem, 6.2vw, 6.5rem);
+  --text-display-xl--line-height: 0.98;
+  --text-display-lg: clamp(1.85rem, 4.2vw, 4.25rem);
+  --text-display-lg--line-height: 1;
+  --text-display-md: clamp(1.35rem, 2.4vw, 2.35rem);
+  --text-display-md--line-height: 1.08;
+  --text-lede: clamp(1.15rem, 1.9vw, 1.6rem);
+  --text-lede--line-height: 1.5;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --breakpoint-3xl: 120rem;
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-pulse-dot: pulse-dot 2.4s var(--ease-expo) infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @keyframes pulse-dot {
+    0% {
+      box-shadow: 0 0 0 0 rgb(221 43 55 / 0.55);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 10px rgb(221 43 55 / 0);
+    }
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --header-h: 4.5rem;
+  }
+
+  html {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    min-height: 100dvh;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: var(--color-signal);
+    color: var(--color-bone);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 3px;
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+}
+
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: var(--outline-width, 1.5px) var(--outline-color, var(--color-bone));
+}
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@utility container-page {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 96rem;
+  padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+@utility section-y {
+  padding-block: clamp(5rem, 11vw, 10rem);
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
