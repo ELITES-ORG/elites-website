@@ -1,7 +1,6 @@
 import { motion } from 'motion/react'
 import { Link } from 'react-router'
 import { ButtonLink } from '@/components/ui/Button'
-import { Glitch } from '@/components/ui/Glitch'
 import { Icon } from '@/components/ui/Icon'
 import { Wordmark } from '@/components/ui/Logo'
 import { RevealText } from '@/components/ui/RevealText'
@@ -10,13 +9,9 @@ import { navigation, site, socials } from '@/content/site'
 import { services } from '@/content/services'
 import { useSmoothScroll } from '@/lib/smooth-scroll-context'
 import { easeExpo, viewportOnce } from '@/lib/motion'
-import { useGlitchLoop } from '@/lib/use-glitch-loop'
-
 const currentYear = new Date().getFullYear()
 
 function FooterCta() {
-  const glitchTarget = useGlitchLoop(2500)
-
   return (
     <section className="bg-signal text-ink">
       <div className="container-page flex flex-col gap-10 py-20 md:gap-14 md:py-28">
@@ -26,15 +21,10 @@ function FooterCta() {
             Start a project
           </p>
           <RevealText
+            glitch
             className="display text-display-xl [--glitch-a:var(--color-bone)] [--glitch-b:var(--color-ink)] [--outline-color:var(--color-ink)]"
-            lines={[
-              <Glitch key="have" ref={glitchTarget(0)}>
-                Have something
-              </Glitch>,
-              <Glitch key="worth" ref={glitchTarget(1)}>
-                <span className="text-outline [--outline-width:2px]">worth building?</span>
-              </Glitch>,
-            ]}
+            lines={['Have something', 'worth building?']}
+            lineClassName={(i) => (i === 1 ? 'text-outline [--outline-width:2px]' : '')}
           />
         </div>
         <div className="flex flex-col gap-6 border-t border-ink/20 pt-8 md:flex-row md:items-center md:justify-between">

@@ -20,6 +20,7 @@ export function SectionHeader({ eyebrow, lines, outlineLine, aside, className }:
           <Eyebrow>{eyebrow}</Eyebrow>
         </FadeIn>
         <RevealText
+          glitch
           className="mt-6 display text-display-lg"
           lines={lines}
           lineClassName={(i) => (i === outlineLine ? 'text-outline' : '')}

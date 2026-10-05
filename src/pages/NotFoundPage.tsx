@@ -13,6 +13,7 @@ export default function NotFoundPage() {
           as="h1"
           trigger="mount"
           delay={PAGE_REVEAL_DELAY}
+          glitch
           className="display text-[clamp(5rem,22vw,18rem)] leading-none"
           lines={[
             <>

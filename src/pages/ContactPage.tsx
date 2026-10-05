@@ -302,6 +302,7 @@ export default function ContactPage() {
           as="h1"
           trigger="mount"
           delay={d + 0.05}
+          glitch
           className="mt-8 display text-display-xl md:mt-10"
           lines={['Tell us about', 'your project']}
           lineClassName={(i) => (i === 1 ? 'text-outline md:[--outline-width:2px]' : '')}

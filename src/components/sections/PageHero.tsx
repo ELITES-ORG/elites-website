@@ -24,6 +24,7 @@ export function PageHero({ eyebrow, lines, outlineLine, intro, aside }: PageHero
         as="h1"
         trigger="mount"
         delay={PAGE_REVEAL_DELAY + 0.05}
+        glitch
         className="mt-8 display text-display-xl md:mt-10"
         lines={lines}
         lineClassName={(i) => (i === outlineLine ? 'text-outline md:[--outline-width:2px]' : '')}
