@@ -39,10 +39,10 @@ export function Hero() {
   return (
     <section
       ref={ref}
-      className="relative flex flex-col justify-end overflow-hidden pt-[calc(var(--header-h)+6rem)] pb-12 md:min-h-[100svh] md:pt-[calc(var(--header-h)+clamp(1.5rem,4vh,3rem))]"
+      className="relative flex flex-col justify-end overflow-hidden pt-[calc(var(--header-h)+2.5rem)] pb-12 md:min-h-[100svh] md:pt-[calc(var(--header-h)+clamp(1.5rem,4vh,3rem))]"
     >
       <div className="container-page">
-        <h1 className="display text-hero">
+        <h1 className="display text-hero max-md:text-[length:min(calc((100vw_-_2*max(1.25rem,4vw))/8.6),4.5rem)]">
           <span className="sr-only">We build software that lasts.</span>
           <span aria-hidden>
             <motion.span className="block" style={{ x: driftLeft }}>
@@ -51,7 +51,7 @@ export function Hero() {
               </Line>
             </motion.span>
 
-            <motion.span className="block pl-[1.6em]" style={{ x: driftRight }}>
+            <motion.span className="block pl-[0.6em] md:pl-[1.6em]" style={{ x: driftRight }}>
               <Line delay={d + 0.08} glitchRef={glitchTarget(1)}>
                 <span className="relative inline-block">
                   <span className="text-outline [--outline-width:1px] md:[--outline-width:2px]">Software</span>
@@ -75,11 +75,11 @@ export function Hero() {
           className="mt-12 grid gap-10 border-t border-graphite pt-8 md:mt-[clamp(2.5rem,7vh,4rem)] md:grid-cols-12 md:items-end"
         >
           <FadeIn trigger="mount" delay={d + 0.45} className="md:col-span-8 xl:col-span-9">
-            <p className="text-lede text-bone/80">
+            <p className="text-lede text-bone/80 max-md:text-[length:1.05rem]">
               Elites is a software development studio. We design, build and maintain web platforms, mobile apps and
               cloud systems for companies that cannot afford downtime.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 inline-grid gap-3 sm:flex sm:flex-wrap">
               <ButtonLink to="/contact">Start a project</ButtonLink>
               <ButtonLink to="/work" variant="outline" arrow={false}>
                 See our work
