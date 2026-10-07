@@ -29,7 +29,7 @@ export const processSteps: ProcessStep[] = [
 
 export const principles: Principle[] = [
   {
-    title: 'Senior people on every project',
+    title: 'Skilled people on every project',
     icon: 'fi-rs-users-alt',
     description:
       'The engineers in the sales call are the engineers who build your product. No bait and switch to a junior bench.',

@@ -14,7 +14,7 @@ export function Intro() {
       <div className="md:col-span-9">
         <ScrollWords
           className="text-[clamp(1.45rem,3.1vw,2.75rem)] leading-[1.3] font-medium tracking-tight"
-          text="We are a small team of engineers and designers. We take on a handful of projects at a time, so every client gets senior attention from the first workshop to the last deploy, and long after launch."
+          text="We are a small team of engineers and designers. We take on a handful of projects at a time, so every client gets hands-on attention from the first workshop to the last deploy, and long after launch."
         />
         <FadeIn delay={0.1} className="mt-12">
           <Link to="/about" className="group inline-flex items-center gap-3 eyebrow text-bone">

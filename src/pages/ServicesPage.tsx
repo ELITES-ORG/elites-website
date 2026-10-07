@@ -104,7 +104,7 @@ export default function ServicesPage() {
         eyebrow="Services"
         lines={['Software,', 'end to end']}
         outlineLine={1}
-        intro="Strategy, design, engineering and support under one roof. Hire us for a single discipline or hand us the whole product. Either way you deal with the same senior team."
+        intro="Strategy, design, engineering and support under one roof. Hire us for a single discipline or hand us the whole product. Either way you deal with the same skilled team."
       />
 
       <section className="container-page pb-[clamp(5rem,11vw,10rem)]">

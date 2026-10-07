@@ -35,8 +35,8 @@ function Story() {
         </FadeIn>
         <FadeIn>
           <p className="text-lede text-bone">
-            Elites started with a simple frustration: good products kept getting slowed down by agencies that sold
-            senior talent and staffed junior teams.
+            Elites started with a simple frustration: good products kept getting slowed down by agencies that pitched
+            their best people, then staffed junior teams.
           </p>
         </FadeIn>
         <FadeIn>
@@ -95,11 +95,11 @@ export default function AboutPage() {
     <>
       <Seo
         title="About"
-        description="Elites is a small software development studio of senior engineers and designers. Learn how we work and what to expect."
+        description="Elites is a small software development studio of skilled engineers and designers. Learn how we work and what to expect."
       />
       <PageHero
         eyebrow="About Elites"
-        lines={['Small team.', 'Senior work.']}
+        lines={['Small team.', 'Skilled work.']}
         outlineLine={0}
         intro="We are a software development studio of engineers and designers who have shipped products for startups, agencies and established businesses. We keep the team small so the people you meet are the people who build."
       />
